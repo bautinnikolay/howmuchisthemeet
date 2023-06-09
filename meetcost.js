@@ -14,7 +14,7 @@ app.use(express.static('public'));
 app.use(express.json({limit: '2mb'}))
 app.use(express.urlencoded({limit: '2mb', extended: true }))
 app.use(mongoSanitize());
-//app.set('view cache', true);
+app.set('view cache', true);
 
 app.use(sess({
     secret: 'howmuchisthemeet',
@@ -23,7 +23,7 @@ app.use(sess({
     cookie: { expires: new Date(Date.now() + 9000000000) }
 }));
 
-//app.use(favicon('./public/favicon.png'));
+app.use(favicon('./public/favicon.png'));
 
 app.set('view engine', 'pug');
 
