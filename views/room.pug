@@ -1,0 +1,40 @@
+html(lang="ru")
+    head
+        meta(charset="utf-8")
+        meta(name="viewport" content="width=device-width, initial-scale=1")
+        link(href="/bootstrap.min.css" rel="stylesheet")
+    body
+        div(class="container" style="padding-top: 50px")
+            div(class="row text-center mb-3")
+                div(class="col-md-8 offset-md-2 col-sm-12")
+                    h1 Комната вашего совещания
+                    if data.ms 
+                        b(class="text-danger") Не закрывайте и не обновляйте страницу до конца совещания
+                        p Иначе комната будет удалена
+            if data.ms
+                div(class="row text-center mb-3")
+                    div(class="col-md-6 offset-md-3 col-sm-12")
+                        div(class="input-group mb-3")
+                            input(type="text" class="form-control" value="http://192.168.0.104/room/"+data.room id="roomUrl" aria-describedby="button-addon2" disabled)
+                            button(class="btn btn-outline-secondary" type="button" id="cpButton" onClick="copyUrl()") Копировать
+            div(class="row text-center mb-3")
+                div(class="col-md-8 offset-md-2 col-sm-12" id="content")
+                    h2 Стоимость: 
+                        span(id="cost") 0
+                    div(class="row")
+                        div(class="col-md-4 offset-md-4 col-sm-12")
+                            p Количество пользователей в комнате: 
+                                span(id="usersCount") #{data.usersCount}
+                            if data.ms
+                                div(class="row")
+                                    div(class="col")
+                                        button(type="submit" class="btn btn-success form-control" id="start") Старт
+                                    div(class="col")
+                                        button(type="submit" class="btn btn-dark form-control" id="stop") Стоп
+                                input(type="hidden" id="ms" value="true")
+                            input(type="hidden" id="room" value=data.room)
+        script(src="/bootstrap.min.js")
+        if data.ms 
+            script(src="/msws.js")
+        else 
+            script(src="/ws.js")
