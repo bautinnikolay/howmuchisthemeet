@@ -80,7 +80,7 @@ app.get('/room/:roomid', (req, res) => {
     }
 })
 
-let server = require('http').createServer(app)
+let server = require('https').createServer(app)
 
 const webSocketServer = new WebSocket.Server({
     port: socketPort
