@@ -3,7 +3,7 @@ let actualCost = 0;
 
 window.onload = function() {
   let url = document.getElementById('room').value;
-  socket = new WebSocket("wss://howmuchisthemeet.ru:443/"+url);
+  socket = new WebSocket("wss://howmuchisthemeet.ru:8081/"+url);
   socket.onmessage = function(event) {
     if(event.data.includes('newCost')) {
       cost = parseFloat(event.data.split(':')[1]);

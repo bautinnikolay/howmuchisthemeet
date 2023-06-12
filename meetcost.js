@@ -94,9 +94,15 @@ const options = {
     ].join(':')
 };
 
+const wssOptions = {
+    cert: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/fullchain.pem'),
+    key: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/privkey.pem')
+}
+
 let server = require('https').createServer(options, app);
 
 const webSocketServer = new WebSocket.Server({
+    options: wssOptions,
     port: 443
 });
 
