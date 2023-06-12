@@ -8,9 +8,6 @@ window.onload = function() {
         url += '?ms'
     }
     socket = new WebSocket("wss://howmuchisthemeet.ru:8081/"+url);
-    socket.onerror = function(error) {
-        console.log.apply(error);
-    }
 
     socket.onmessage = function(event) {
         if(event.data.includes('newCost')) {

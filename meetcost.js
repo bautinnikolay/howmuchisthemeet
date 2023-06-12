@@ -126,6 +126,10 @@ webSocketServer.on('connection', function(ws, req) {
         }
     });
     
+    ws.on('error', function(error) {
+        console.log(error);
+    })
+
     ws.on('message', function(message) {
         if(ms) {
             Room.findOne({_id: roomID}).then((result) => {
