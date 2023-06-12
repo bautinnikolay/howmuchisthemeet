@@ -7,7 +7,7 @@ window.onload = function() {
     if(document.getElementById('ms').value === 'true') {
         url += '?ms'
     }
-    socket = new WebSocket("ws://howmuchisthemeet.ru:8081/"+url);
+    socket = new WebSocket("ws://howmuchisthemeet.ru:443/"+url);
 
     socket.onmessage = function(event) {
         if(event.data.includes('newCost')) {

@@ -97,7 +97,7 @@ const options = {
 let server = require('https').createServer(options, app);
 
 const webSocketServer = new WebSocket.Server({
-    port: socketPort
+    port: 443
 });
 
 let clients = {}//куча клиентов
