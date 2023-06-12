@@ -96,9 +96,7 @@ const options = {
 
 let server = require('https').createServer(options, app);
 
-const webSocketServer = new WebSocket.Server({
-    'wss://howmuchisthemeet.ru/wss'
-});
+const webSocketServer = new WebSocket.Server('wss://howmuchisthemeet.ru/wss');
 
 let clients = {}//куча клиентов
 
