@@ -5,6 +5,7 @@ const favicon = require('serve-favicon');
 const {mongoose} = require('./mongoose/mongoose');
 const WebSocket = require( "ws");
 const {Room} = require('./models/rooms');
+const fs = require('fs');
 
 let socketPort = process.env.SOCKET_PORT ? process.env.SOCKET_PORT : 8081;
 let app = express();
