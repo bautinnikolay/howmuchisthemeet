@@ -76,7 +76,13 @@ app.get('/room/:roomid', (req, res) => {
             }
         });
     } else {
-        res.render('preroom', {room: req.params.roomid});
+        Room.findOne({_id: req.params.roomid}).then((result) => {
+            if(result) {
+                res.render('preroom', {room: req.params.roomid});
+            } else {
+                res.redirect('/')
+            }
+        });
     }
 })
 
@@ -153,9 +159,13 @@ webSocketServer.on('connection', function(ws, req) {
                 Room.deleteOne({_id: roomID}).then(() => {});
             });
         } else {//если вышел клиент - просто удаляем его из кучи
-            Room.updateOne({_id: roomID}, {$pull: {users: id}}).then(() => {
-                delete clients[user];
-            });
+            Room.findOne({_id: roomID}).then((result) => {
+                if(result) {
+                    Room.updateOne({_id: roomID}, {$pull: {users: id}}).then(() => {
+                        delete clients[user];
+                    });
+                }
+            })
         }
     });
 });

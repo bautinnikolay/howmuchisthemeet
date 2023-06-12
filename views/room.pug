@@ -28,9 +28,12 @@ html(lang="ru")
                             if data.ms
                                 div(class="row")
                                     div(class="col")
-                                        button(type="submit" class="btn btn-success form-control" id="start") Старт
+                                        button(class="btn btn-success form-control" id="start") Старт
                                     div(class="col")
-                                        button(type="submit" class="btn btn-dark form-control" id="stop") Стоп
+                                        button(class="btn btn-dark form-control" id="stop") Стоп
+                                div(class="row")
+                                    div(class="col")
+                                        button(class="btn btn-light form-control" id="exit") Закрыть комнату
                                 input(type="hidden" id="ms" value="true")
                             input(type="hidden" id="room" value=data.room)
         script(src="/bootstrap.min.js")

@@ -31,7 +31,11 @@ document.getElementById('stop').onclick = function() {
     clearTimeout(timer);
     document.getElementById('start').disabled = false;
 }
- 
+
+document.getElementById('exit').onclick = function() {
+    window.location.replace('https://howmuchisthemeet.ru/');
+}
+
 function startTimer() {
     timer = setTimeout(function() {
         actualCost = actualCost+cost;
