@@ -82,10 +82,19 @@ app.get('/room/:roomid', (req, res) => {
 
 const options = {
     cert: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/fullchain.pem'),
-    key: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/privkey.pem')
+    key: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/privkey.pem'),
+    ciphers: [
+        "ECDHE-RSA-AES128-SHA256",
+        "DHE-RSA-AES128-SHA256",
+        "AES128-GCM-SHA256",
+        "RC4",
+        "HIGH",
+        "!MD5",
+        "!aNULL"
+    ].join(':')
 };
 
-let server = require('https').createServer(app, options)
+let server = require('https').createServer(options, app);
 
 const webSocketServer = new WebSocket.Server({
     port: socketPort
