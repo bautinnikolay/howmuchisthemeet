@@ -6,7 +6,6 @@ const {mongoose} = require('./mongoose/mongoose');
 const WebSocket = require( "ws");
 const {Room} = require('./models/rooms');
 
-let appPort = process.env.APP_PORT ? process.env.APP_PORT : 3000;
 let socketPort = process.env.SOCKET_PORT ? process.env.SOCKET_PORT : 8081;
 let app = express();
 app.disable('x-powered-by');
@@ -80,7 +79,12 @@ app.get('/room/:roomid', (req, res) => {
     }
 })
 
-let server = require('https').createServer(app)
+const options = {
+    cert: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/fullchain.pem'),
+    key: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/privkey.pem')
+};
+
+let server = require('https').createServer(app, options)
 
 const webSocketServer = new WebSocket.Server({
     port: socketPort
@@ -144,5 +148,5 @@ webSocketServer.on('connection', function(ws, req) {
     });
 });
 
-server.listen(appPort);
+server.listen(443);
 console.log('Server started!');
