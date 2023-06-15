@@ -1,5 +1,4 @@
-let socket, cost;
-let actualCost = 0;
+let socket;
 
 window.onload = function() {
     let url = document.getElementById('room').value;
@@ -10,11 +9,11 @@ window.onload = function() {
     socket = new WebSocket("wss://howmuchisthemeet.ru:443/"+url);
 
     socket.onmessage = function(event) {
-        if(event.data.includes('newCost')) {
-            cost = parseFloat(event.data.split(':')[1]);
-        }
         if(event.data.includes('usersCount')) {
             document.getElementById('usersCount').textContent = event.data.split(':')[1];
+        }
+        if(event.data.includes('actualCost')) {
+            document.getElementById('cost').textContent = event.data.split(':')[1];
         }
     };
     return false;
@@ -22,26 +21,16 @@ window.onload = function() {
 
 document.getElementById('start').onclick = function() {
     socket.send('start');
-    startTimer();
     document.getElementById('start').disabled = true;
 }
 
 document.getElementById('stop').onclick = function() {
     socket.send('stop');
-    clearTimeout(timer);
     document.getElementById('start').disabled = false;
 }
 
 document.getElementById('exit').onclick = function() {
     window.location.replace('https://howmuchisthemeet.ru/');
-}
-
-function startTimer() {
-    timer = setTimeout(function() {
-        actualCost = actualCost+cost;
-        document.getElementById('cost').textContent = actualCost.toFixed(2);
-        startTimer();
-    }, 1000);
 }
 
 function copyUrl() {

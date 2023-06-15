@@ -7,7 +7,6 @@ const WebSocket = require( "ws");
 const {Room} = require('./models/rooms');
 const fs = require('fs');
 
-let socketPort = process.env.SOCKET_PORT ? process.env.SOCKET_PORT : 8081;
 let app = express();
 app.disable('x-powered-by');
 app.use(express.static('public'));
@@ -101,45 +100,46 @@ const options = {
 };
 
 let server = require('https').createServer(options, app);
+//let server = require('http').createServer(app);
 
 const webSocketServer = new WebSocket.Server({server});
 
-let clients = {}//куча клиентов
-
+let clients = {};//куча клиентов
 webSocketServer.on('connection', function(ws, req) {
     let id = Math.random();
     clients[id] = ws
     let ms = req.url.slice(1).split('?')[1];
     let roomID = req.url.slice(1).split('?')[0];
+    let timer;
+    let actualCost = 0;
     Room.findOne({_id: roomID}).then((result) => {
         if(result) {
             Room.updateOne({_id: result._id}, {$push: {users: id}}).then(() => {
-                cost = (result.cost/576000).toFixed(2);//делим общую кучу денег на количество рабочих секунд в месяце из расчёта 20 дней по 8 часов
-                clients[id].send('newCost:'+cost);
                 result.users.forEach(user => {
-                    clients[user].send('newCost:'+cost);
                     clients[user].send('usersCount:'+result.usersCount);
                 });
             })
         }
     });
-    
-    ws.on('error', function(error) {
-        console.log(error);
-    })
 
     ws.on('message', function(message) {
         if(ms) {
             Room.findOne({_id: roomID}).then((result) => {
                 if(result) {
                     if(message.toString() === 'start') {
-                        result.users.forEach(user => {
-                            clients[user].send('start');
-                        });
+                        timer = setInterval(function() {
+                            Room.findOne({_id: roomID}).then((data) => {
+                                actualCost = actualCost + (data.cost/576000*5);
+                                data.users.forEach(user => {
+                                    clients[user].send('actualCost:'+actualCost.toFixed(2));
+                                });
+                            })
+                        }, 5000);
                     }
                     if(message.toString() === 'stop') {
+                        clearInterval(timer);
                         result.users.forEach(user => {
-                            clients[user].send('stop');
+                            clients[user].send('actualCost:'+actualCost.toFixed(2));
                         });
                     }
                 }
@@ -149,6 +149,7 @@ webSocketServer.on('connection', function(ws, req) {
     
     ws.on('close', function() {
         if(ms) {//если вышел владелец - удаляем комнату из базы, и клиентов из кучи
+            clearInterval(timer);
             Room.findOne({_id: roomID}).then((result) => {
                 if(result) {
                     result.users.forEach(user => {
@@ -162,7 +163,9 @@ webSocketServer.on('connection', function(ws, req) {
             Room.findOne({_id: roomID}).then((result) => {
                 if(result) {
                     Room.updateOne({_id: roomID}, {$pull: {users: id}}).then(() => {
-                        delete clients[user];
+                        try {
+                            delete clients[user];
+                        } catch(e) {}
                     });
                 }
             })
