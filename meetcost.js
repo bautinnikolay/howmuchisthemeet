@@ -16,7 +16,7 @@ app.use(mongoSanitize());
 app.set('view cache', true);
 
 app.use(sess({
-    secret: 'howmuchisthemeet',
+    secret: 'secret_word_here',
     resave: false,
     saveUninitialized: true,
     cookie: { expires: new Date(Date.now() + 9000000000) }
@@ -86,8 +86,8 @@ app.get('/room/:roomid', (req, res) => {
 })
 
 const options = {
-    cert: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/fullchain.pem'),
-    key: fs.readFileSync('/etc/letsencrypt/live/howmuchisthemeet.ru/privkey.pem'),
+    cert: fs.readFileSync('cert_path_here'),
+    key: fs.readFileSync('key_pass_here'),
     ciphers: [
         "ECDHE-RSA-AES128-SHA256",
         "DHE-RSA-AES128-SHA256",
